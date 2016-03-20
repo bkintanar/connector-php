@@ -1,9 +1,8 @@
 <?php
-namespace Dhtmlx\Connector\DataStorage;
-use Dhtmlx\Connector\DataProcessor\DataProcessor;
-use \Exception;
 
-class PHPLaravelZenIntraDBDataWrapper extends ArrayDBDataWrapper {
+namespace Dhtmlx\Connector\DataStorage;
+
+class PHPLaravelZenIntraDBDataWrapper extends PHPLaravelDBDataWrapper {
 
 	public function select($source) {
         $sourceData = $source->get_source();
@@ -14,15 +13,6 @@ class PHPLaravelZenIntraDBDataWrapper extends ArrayDBDataWrapper {
         }
 
 		return new ArrayQueryWrapper($res);
-	}
-
-	protected function getErrorMessage() {
-		$errors = $this->connection->getErrors();
-		$text = array();
-		foreach($errors as $key => $value)
-			$text[] = $key." - ".$value[0];
-
-		return implode("\n", $text);
 	}
 
 	public function insert($data, $source) {
@@ -50,36 +40,4 @@ class PHPLaravelZenIntraDBDataWrapper extends ArrayDBDataWrapper {
         $this->fill_model($obj, $data)->save();
         $data->success();
 	}
-
-    private function fill_model($obj, $data) {
-        $dataArray = $data->get_data();
-        unset($dataArray[DataProcessor::$action_param]);
-        unset($dataArray[$this->config->id["db_name"]]);
-
-        foreach($dataArray as $key => $value)
-            $obj->$key = $value;
-
-        return $obj;
-    }
-
-	protected function errors_to_string($errors) {
-		$text = array();
-		foreach($errors as $value)
-			$text[] = implode("\n", $value);
-
-		return implode("\n",$text);
-	}
-
-	public function escape($str) {
-		throw new Exception("Not implemented");
-	}
-
-	public function query($str) {
-		throw new Exception("Not implemented");
-	}
-
-	public function get_new_id() {
-		throw new Exception("Not implemented");
-	}
-
 }
