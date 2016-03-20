@@ -48,7 +48,7 @@ class PHPLaravelDBDataWrapper extends ArrayDBDataWrapper {
         $data->success();
 	}
 
-    private function fill_model($obj, $data) {
+    public function fill_model($obj, $data) {
         $dataArray = $data->get_data();
         unset($dataArray[DataProcessor::$action_param]);
         unset($dataArray[$this->config->id["db_name"]]);
